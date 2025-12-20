@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Typing Speed Test</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="assets/images/logo-small.svg" alt="" class="logo">
+    <div class="best-speed">
+      <img src="assets/images/icon-personal-best.svg" alt="trophy">
+      <p>
+        Personal best: <span class="best-speed-value">92WPM</span>
+      </p>
+    </div>
+  </header>
+  <main>
+    <div class="test">
+      <div class="test-header">
+        <ul class="test-scores">
+          <li class="test-score-item"><p>WPM: <span class="test-wpm">0</span></p></li>
+          <li class="test-score-item"><p>Accuracy: <span class="test-accuracy">100%</span></p></li>
+          <li class="test-score-item"><p>Time: <span class="test-time">0:60</span></p></li>
+        </ul>
+        <ul class="test-settings">
+          <li class="test-settings-item">
+            <fieldset>
+              <legend>Difficulty:</legend>
+              <label><input type="radio" name="difficulty" value="easy">Easy</label>
+              <label><input type="radio" name="difficulty" value="medium">Medium</label>
+              <label><input type="radio" name="difficulty" value="hard">Hard</label>
+            </fieldset>
+          </li>
+          <li class="test-settings-item">
+            <fieldset>
+              <legend>Mode:</legend>
+              <label><input type="radio" name="mode" value="timed">Timed(60s)</label>
+              <label><input type="radio" name="mode" value="passage">Passage</label>
+            </fieldset>
+          </li>
+        </ul>
+      </div>
+      <div class="passage">
+        <textarea name="test-passage">
+          The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. "We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods," the lead researcher observed. "Globalization isn't as modern as we assume."
+        </textarea>
+        <div class="starting">
+          <button>Start Typing Test</button>
+          <p>Or click the text and start typing</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
+    Coded by Somaia.
+  </footer>
+</body>
+</html>
