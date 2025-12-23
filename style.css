@@ -16,7 +16,7 @@
   font-family: "Sora";
   src:
     local("Sora"),
-    url("assets/fonts/Sora/Sora-VariableFont_wght.ttf") format("ttf");
+    url("assets/fonts/Sora/Sora-VariableFont_wght.ttf");
 }
 
 /* Table of content:
@@ -41,4 +41,25 @@ body {
   background-color: var(--neutral-900);
   color: var(--neutral-0);
   font-family: 'Sora', system-ui;
+}
+
+/* 3. Layout */
+.container {
+  width: min(90%, 75rem);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1em 0;
+}
+.best-speed {
+  display: flex;
+  gap: 1rem;
+}
+.personal-best-txt {
+  color: var(--neutral-400);
 }
