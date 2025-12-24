@@ -25,31 +25,39 @@
     <div class="best-speed">
       <img src="assets/images/icon-personal-best.svg" alt="trophy">
       <p>
-        <span class="personal-best-txt">Best</span>: <span class="best-speed-value">92WPM</span>
+        <span class="personal-best-txt">Best:</span> <span class="best-speed-value">92WPM</span>
       </p>
     </div>
   </header>
-  <main>
+  <main class="container">
     <div class="test">
       <div class="test-header">
         <ul class="test-scores">
-          <li class="test-score-item"><p>WPM: <span class="test-wpm">0</span></p></li>
-          <li class="test-score-item"><p>Accuracy: <span class="test-accuracy">100%</span></p></li>
-          <li class="test-score-item"><p>Time: <span class="test-time">0:60</span></p></li>
+          <li class="test-score-item wpm-container"><p>WPM: </p><span class="test-wpm">0</span></li>
+          <li class="test-score-item accuracy-container"><p>Accuracy: </p><span class="test-accuracy">100%</span></li>
+          <li class="test-score-item time-container"><p>Time: </p><span class="test-time">0:60</span></li>
         </ul>
         <ul class="test-settings">
           <li class="test-settings-item">
-            <fieldset>
+            <button type="button">
+              <span>Easy</span>
+              <img src="assets/images/icon-down-arrow.svg" alt="">
+            </button>
+            <fieldset class="options">
               <legend>Difficulty:</legend>
-              <label><input type="radio" name="difficulty" value="easy">Easy</label>
+              <label><input type="radio" name="difficulty" value="easy" checked>Easy</label>
               <label><input type="radio" name="difficulty" value="medium">Medium</label>
               <label><input type="radio" name="difficulty" value="hard">Hard</label>
             </fieldset>
           </li>
           <li class="test-settings-item">
-            <fieldset>
+            <button type="button">
+              <span>Timed(60)</span>
+              <img src="assets/images/icon-down-arrow.svg" alt="">
+            </button>
+            <fieldset class="options">
               <legend>Mode:</legend>
-              <label><input type="radio" name="mode" value="timed">Timed(60s)</label>
+              <label><input type="radio" name="mode" value="timed" checked>Timed(60s)</label>
               <label><input type="radio" name="mode" value="passage">Passage</label>
             </fieldset>
           </li>

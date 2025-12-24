@@ -1,6 +1,7 @@
 :root {
   --neutral-900: hsl(0, 0%, 7%);
   --neutral-800: hsl(0, 0%, 15%);
+  --neutral-700: hsl(0, 0%, 23%);
   --neutral-500: hsl(240, 3%, 46%);
   --neutral-400: hsl(240, 1%, 59%);
   --neutral-0: hsl(0, 0%, 100%);
@@ -22,9 +23,15 @@
 /* Table of content:
     1. Reset
     2. General styles
+    3. Layout
+      3.1 Header
+      3.2 Test header
+      3.3 Test scores
+      3.4 Test settings
 */
 
-/* 1. Reset */
+/* 1. Reset *******************************************************************************
+*******************************************************************************************/
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -36,25 +43,40 @@ img {
   max-width: 100%;
 }
 
-/* 2. General styles */
+/* 2. General styles **********************************************************************
+*******************************************************************************************/
 body {
   background-color: var(--neutral-900);
   color: var(--neutral-0);
   font-family: 'Sora', system-ui;
 }
-
-/* 3. Layout */
-.container {
-  width: min(90%, 75rem);
-  margin: 0 auto;
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+input[type="radio"] {
+  margin-inline: 0.625em;
+}
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
+/* 3. Layout ******************************************************************************
+*******************************************************************************************/
+.container {
+  width: min(90%, 75rem);
+  margin: 1em auto;
+}
+
+/* 3.1 Header *****************************************************************************
+*******************************************************************************************/
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  padding: 1em 0;
 }
 .best-speed {
   display: flex;
@@ -62,4 +84,53 @@ header {
 }
 .personal-best-txt {
   color: var(--neutral-400);
+}
+
+/* 3.2 Test header ************************************************************************
+*******************************************************************************************/
+.test-header {
+  border-block-end: 1px solid var(--neutral-700);
+}
+
+/* 3.3 Test scores ************************************************************************
+*******************************************************************************************/
+.test-scores {
+  display: flex;
+  text-align: center;
+}
+.test-score-item {
+  flex: 1;
+  p {
+    margin-block-start: 0;
+    color: var(--neutral-400);
+  }
+  + .test-score-item {
+    border-inline-start: 1px solid var(--neutral-400);
+  }
+}
+
+/* 3.4 Test settings **********************************************************************
+*******************************************************************************************/
+.test-settings {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.625em;
+  margin-block: 1em;
+}
+.test-settings button {
+  border: 1px solid var(--neutral-500);
+  border-radius: 8px;
+  padding: 0.375em 0;
+  background-color: var(--neutral-900);
+  font: inherit;
+  color: var(--neutral-0);
+  width: 100%;
+  text-align: center;
+
+  display: flex;
+  justify-content: center;
+  gap: .625em;
+}
+.options {
+  display: none;
 }
