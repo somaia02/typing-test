@@ -49,7 +49,7 @@ body {
   margin: 0 auto;
 }
 
-.header {
+header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,7 +58,7 @@ body {
 }
 .best-speed {
   display: flex;
-  gap: 1rem;
+  gap: 0.625rem;
 }
 .personal-best-txt {
   color: var(--neutral-400);
