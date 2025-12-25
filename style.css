@@ -25,9 +25,11 @@
     2. General styles
     3. Layout
       3.1 Header
-      3.2 Test header
-      3.3 Test scores
-      3.4 Test settings
+      3.2 Main
+      3.3 Test header
+      3.4 Test scores
+      3.5 Test settings
+      3.6 Starting page
 */
 
 /* 1. Reset *******************************************************************************
@@ -70,6 +72,11 @@ fieldset {
   width: min(90%, 75rem);
   margin: 1em auto;
 }
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
 /* 3.1 Header *****************************************************************************
 *******************************************************************************************/
@@ -86,13 +93,21 @@ header {
   color: var(--neutral-400);
 }
 
-/* 3.2 Test header ************************************************************************
+/* 3.2 Main *******************************************************************************
+*******************************************************************************************/
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 3.3 Test header ************************************************************************
 *******************************************************************************************/
 .test-header {
   border-block-end: 1px solid var(--neutral-700);
 }
 
-/* 3.3 Test scores ************************************************************************
+/* 3.4 Test scores ************************************************************************
 *******************************************************************************************/
 .test-scores {
   display: flex;
@@ -109,7 +124,7 @@ header {
   }
 }
 
-/* 3.4 Test settings **********************************************************************
+/* 3.5 Test settings **********************************************************************
 *******************************************************************************************/
 .test-settings {
   display: grid;
@@ -133,4 +148,37 @@ header {
 }
 .options {
   display: none;
+}
+
+/* 3.6 Starting page **********************************************************************
+*******************************************************************************************/
+.passage-container {
+  flex: 1;
+  display: grid;
+  grid-template-areas: "single-cell";
+  & > * {
+    grid-area: single-cell;
+  }
+}
+.test-passage {
+  background-color: var(--neutral-900);
+  color: var(--neutral-0);
+  border: none;
+  font: inherit;
+  font-size: 2rem;
+  opacity: 40%;
+}
+.starting-screen {
+  display: grid;
+  place-content: center;
+  backdrop-filter: blur(8px);
+  margin: -0.5em;
+}
+.starting-screen button {
+  background-color: var(--blue-600);
+  color: var(--neutral-0);
+  font: inherit;
+  border-radius: 12px;
+  padding: 1em 1.5em;
+  border: none;
 }
