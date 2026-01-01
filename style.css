@@ -23,13 +23,15 @@
 /* Table of content:
     1. Reset
     2. General styles
-    3. Layout
-      3.1 Header
-      3.2 Main
-      3.3 Test header
-      3.4 Test scores
-      3.5 Test settings
-      3.6 Starting page
+    3. Utilities
+    4. Layout
+      4.1 Header
+      4.2 Main
+      4.3 Test header
+      4.4 Test scores
+      4.5 Test settings
+      4.6 Starting page
+      4.7 Passage
 */
 
 /* 1. Reset *******************************************************************************
@@ -66,7 +68,13 @@ fieldset {
   padding: 0;
 }
 
-/* 3. Layout ******************************************************************************
+/* 3. Utilities ***************************************************************************
+*******************************************************************************************/
+.invisible {
+  visibility: hidden;
+}
+
+/* 4. Layout ******************************************************************************
 *******************************************************************************************/
 .container {
   width: min(90%, 75rem);
@@ -78,7 +86,7 @@ body {
   min-height: 100vh;
 }
 
-/* 3.1 Header *****************************************************************************
+/* 4.1 Header *****************************************************************************
 *******************************************************************************************/
 header {
   display: flex;
@@ -93,7 +101,7 @@ header {
   color: var(--neutral-400);
 }
 
-/* 3.2 Main *******************************************************************************
+/* 4.2 Main *******************************************************************************
 *******************************************************************************************/
 main {
   flex: 1;
@@ -101,13 +109,13 @@ main {
   flex-direction: column;
 }
 
-/* 3.3 Test header ************************************************************************
+/* 4.3 Test header ************************************************************************
 *******************************************************************************************/
 .test-header {
   border-block-end: 1px solid var(--neutral-700);
 }
 
-/* 3.4 Test scores ************************************************************************
+/* 4.4 Test scores ************************************************************************
 *******************************************************************************************/
 .test-scores {
   display: flex;
@@ -124,7 +132,7 @@ main {
   }
 }
 
-/* 3.5 Test settings **********************************************************************
+/* 4.5 Test settings **********************************************************************
 *******************************************************************************************/
 .test-settings {
   display: grid;
@@ -132,7 +140,7 @@ main {
   gap: 0.625em;
   margin-block: 1em;
 }
-.test-settings button {
+.setting-btn {
   border: 1px solid var(--neutral-500);
   border-radius: 8px;
   padding: 0.375em 0;
@@ -145,12 +153,14 @@ main {
   display: flex;
   justify-content: center;
   gap: .625em;
+
+  position: relative;
 }
-.options {
-  display: none;
+.options{
+  position: absolute;
 }
 
-/* 3.6 Starting page **********************************************************************
+/* 4.6 Starting page **********************************************************************
 *******************************************************************************************/
 .passage-container {
   flex: 1;
@@ -160,25 +170,45 @@ main {
     grid-area: single-cell;
   }
 }
-.test-passage {
-  background-color: var(--neutral-900);
-  color: var(--neutral-0);
-  border: none;
-  font: inherit;
-  font-size: 2rem;
-  opacity: 40%;
-}
 .starting-screen {
   display: grid;
   place-content: center;
   backdrop-filter: blur(8px);
   margin: -0.5em;
 }
-.starting-screen button {
+.start-btn {
   background-color: var(--blue-600);
   color: var(--neutral-0);
   font: inherit;
   border-radius: 12px;
   padding: 1em 1.5em;
   border: none;
+}
+
+/* 4.7 Passage ****************************************************************************
+*******************************************************************************************/
+.test-passage-txt {
+  font-size: 2rem;
+  color: var(--neutral-400);
+}
+.test-passage-input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+.letter{
+  position: relative;
+}
+.highlighted-letter:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: hsl(0 0 100% / 0.2);
+}
+.green-letter {
+  color: var(--green-500);
+}
+.red-letter {
+  color: var(--red-500);
+  text-decoration: underline;
 }

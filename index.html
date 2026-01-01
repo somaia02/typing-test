@@ -8,7 +8,7 @@
   
   <title>Frontend Mentor | Typing Speed Test</title>
   <link rel="stylesheet" href="style.css">
-  <script async src="main.js"></script>
+  <script defer src="main.js"></script>
 
   <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
   <style>
@@ -38,11 +38,11 @@
       </ul>
       <ul class="test-settings">
         <li class="test-settings-item">
-          <button type="button">
+          <button type="button" class="setting-btn difficulty-btn">
             <span>Easy</span>
-            <img src="assets/images/icon-down-arrow.svg" alt="">
+            <img src="assets/images/icon-down-arrow.svg" alt="arrow">
           </button>
-          <fieldset class="options">
+          <fieldset class="options difficulty-options invisible">
             <legend>Difficulty:</legend>
             <label><input type="radio" name="difficulty" value="easy" checked>Easy</label>
             <label><input type="radio" name="difficulty" value="medium">Medium</label>
@@ -50,11 +50,11 @@
           </fieldset>
         </li>
         <li class="test-settings-item">
-          <button type="button">
+          <button type="button" class="setting-btn mode-btn">
             <span>Timed(60)</span>
-            <img src="assets/images/icon-down-arrow.svg" alt="">
+            <img src="assets/images/icon-down-arrow.svg" alt="arrow">
           </button>
-          <fieldset class="options">
+          <fieldset class="options mode-options invisible">
             <legend>Mode:</legend>
             <label><input type="radio" name="mode" value="timed" checked>Timed(60s)</label>
             <label><input type="radio" name="mode" value="passage">Passage</label>
@@ -63,9 +63,10 @@
       </ul>
     </div>
     <div class="passage-container">
-      <textarea name="test-passage" class="test-passage">The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. "We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods," the lead researcher observed. "Globalization isn't as modern as we assume."</textarea>
+      <p class="test-passage-txt"></p>
+      <textarea name="test-passage" class="test-passage-input" data-prev-value="" tabindex="-1"></textarea>
       <div class="starting-screen">
-        <button>Start Typing Test</button>
+        <button type="button" class="start-btn">Start Typing Test</button>
         <p>Or click the text and start typing</p>
       </div>
     </div>
