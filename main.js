@@ -3,14 +3,16 @@ const $startingScreen = document.querySelector(".starting-screen");
 const $startBtn = document.querySelector(".start-btn");
 const $passageTxt = document.querySelector(".test-passage-txt");
 const $passageInput = document.querySelector(".test-passage-input");
+const $restartBtn = document.querySelector(".restart-btn");
 
-let testPassage = "The archaeological expedition unearthed artifacts that complicated";
+let testPassage = "The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.\"";
 
 function displayDesktop() {
   $personalBestTxt.textContent = "Personal best:";
 }
 
 function renderPassage() {
+  $passageTxt.innerHTML = "";
   for (let i in testPassage) {
     const letter = document.createElement("span");
     letter.id = String(i);
@@ -23,10 +25,13 @@ function renderPassage() {
 function showPassage() {
   $startingScreen.classList.add("invisible");
   $passageInput.focus();
+  $restartBtn.classList.add("restart-btn-shown");
 }
 
 function blurPassage() {
   $startingScreen.classList.remove("invisible");
+  $passageInput.blur();
+  $restartBtn.classList.remove("restart-btn-shown");
 }
 
 function handleInvalidAction(e) {
@@ -80,6 +85,15 @@ function handleDelete(length) {
     nxtLetter.classList.remove("highlighted-letter");
   }
 }
+function restartTest() {
+  // TODO: reset scores
+
+  // Clear input and reset colors
+  renderPassage();
+  $passageInput.value = "";
+  $passageInput.dataset.prevValue = "";
+  $passageInput.focus();
+}
 
 const desktopView = window.matchMedia("(min-width: 40em)").matches;
 if (desktopView) {
@@ -90,6 +104,7 @@ renderPassage();
 $startBtn.focus();
 $startBtn.addEventListener("click", showPassage);
 $startingScreen.addEventListener("click", showPassage);
-$passageInput.addEventListener("blur", blurPassage);
+// $passageInput.addEventListener("blur", blurPassage);
 $passageInput.addEventListener("keydown", handleInvalidAction);
 $passageInput.addEventListener("input", handlePassageInput);
+$restartBtn.addEventListener("click", restartTest);
