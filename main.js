@@ -4,7 +4,14 @@ const $startBtn = document.querySelector(".start-btn");
 const $passageTxt = document.querySelector(".test-passage-txt");
 const $passageInput = document.querySelector(".test-passage-input");
 const $restartBtn = document.querySelector(".restart-btn");
+const $wpmScore = document.querySelector(".score-value-wpm");
+const $accuracyScore = document.querySelector(".score-value-accuracy");
+const $timeScore = document.querySelector(".score-value-time");
 
+let timerID;
+let errorCount = 0;
+let totalTypedLetters = 0;
+let startingTime = $timeScore.dataset.time;
 let testPassage = "The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.\"";
 
 function displayDesktop() {
@@ -22,10 +29,32 @@ function renderPassage() {
   }
 }
 
-function showPassage() {
+function startTest() {
+  // Show passage
   $startingScreen.classList.add("invisible");
   $passageInput.focus();
   $restartBtn.classList.add("restart-btn-shown");
+
+  // Add colors to scores
+  $accuracyScore.classList.add("red-txt");
+  $timeScore.classList.add("yellow-txt");
+
+  // Start timer
+  timerID = setInterval(updateTime, 1000);
+}
+
+function updateTime() {
+  let currentTime = $timeScore.dataset.time;
+  // TODO: check test settings
+  currentTime--;
+  $timeScore.dataset.time = currentTime;
+  minutes = Math.floor(currentTime / 60);
+  seconds = currentTime % 60;
+  $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  if (currentTime === 0) {
+    clearInterval(timerID);
+    // TODO: Show results
+  }
 }
 
 function blurPassage() {
@@ -42,12 +71,15 @@ function handleInvalidAction(e) {
 function handlePassageInput(e) {
   const inputPassage = e.target.value;
   const length = inputPassage.length;
+  
+  if (length > testPassage.length) {
+    // TODO: remove this and show results
+    e.target.value = e.target.dataset.prevValue;
+    return
+  }
 
-  // End of passage OR deletion/insertion of multiple letters at once
-  if (
-    length > testPassage.length ||
-    Math.abs(length - e.target.dataset.prevValue.length) !== 1
-  ) {
+  // Prevent deletion/insertion of multiple letters at once
+  if (Math.abs(length - e.target.dataset.prevValue.length) !== 1) {
     e.target.value = e.target.dataset.prevValue;
     return
   }
@@ -58,16 +90,21 @@ function handlePassageInput(e) {
     handleInsert(inputPassage, length);
   }
   e.target.dataset.prevValue = inputPassage;
+
+  updateScores();
 }
 
 function handleInsert(inputPassage, length) {
   const letter = document.getElementById(length - 1);
   letter.classList.remove("highlighted-letter");
   if (inputPassage.at(-1) === letter.textContent) {
-    letter.classList.add("green-letter");
+    letter.classList.add("green-txt");
   } else {
-    letter.classList.add("red-letter");
+    letter.classList.add("red-txt");
+    letter.classList.add("underlined-txt");
+    errorCount++;
   }
+  totalTypedLetters++;
 
   const nxtLetter = document.getElementById(length);
   if (nxtLetter) {
@@ -77,18 +114,29 @@ function handleInsert(inputPassage, length) {
 function handleDelete(length) {
   const letter = document.getElementById(length);
   letter.classList.add("highlighted-letter");
-  letter.classList.remove("green-letter");
-  letter.classList.remove("red-letter");
+  letter.classList.remove("green-txt");
+  letter.classList.remove("red-txt");
+  letter.classList.remove("underlined-txt");
 
   const nxtLetter = document.getElementById(length + 1);
   if (nxtLetter) {
     nxtLetter.classList.remove("highlighted-letter");
   }
 }
+function updateScores() {
+  $accuracyScore.textContent = (((totalTypedLetters - errorCount) * 100) / totalTypedLetters).toFixed(2) + "%";
+  const typingDuration = Math.abs($timeScore.dataset.time - startingTime) / 60;
+  const wordCount = (totalTypedLetters - errorCount) / 5;
+  $wpmScore.textContent = Math.round(wordCount / typingDuration);
+}
+function resetScores() {
+  $wpmScore.textContent = "0";
+  $accuracyScore.textContent = "100%";
+  $timeScore.dataset.time = startingTime;
+  $timeScore.textContent = "00:00";
+}
 function restartTest() {
-  // TODO: reset scores
-
-  // Clear input and reset colors
+  resetScores();
   renderPassage();
   $passageInput.value = "";
   $passageInput.dataset.prevValue = "";
@@ -102,8 +150,7 @@ if (desktopView) {
 
 renderPassage();
 $startBtn.focus();
-$startBtn.addEventListener("click", showPassage);
-$startingScreen.addEventListener("click", showPassage);
+$startingScreen.addEventListener("click", startTest);
 // $passageInput.addEventListener("blur", blurPassage);
 $passageInput.addEventListener("keydown", handleInvalidAction);
 $passageInput.addEventListener("input", handlePassageInput);

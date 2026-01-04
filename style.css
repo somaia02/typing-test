@@ -81,6 +81,18 @@ fieldset {
 .invisible {
   visibility: hidden;
 }
+.red-txt {
+  color: var(--red-500);
+}
+.yellow-txt {
+  color: var(--yellow-400);
+}
+.green-txt {
+  color: var(--green-500);
+}
+.underlined-txt {
+  text-decoration: underline;
+}
 
 /* 4. Layout ******************************************************************************
 *******************************************************************************************/
@@ -91,7 +103,7 @@ fieldset {
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
 }
 
 /* 4.1 Header *****************************************************************************
@@ -112,9 +124,8 @@ header {
 /* 4.2 Main *******************************************************************************
 *******************************************************************************************/
 main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  overflow-y: auto;
 }
 
 /* 4.3 Test header ************************************************************************
@@ -133,11 +144,16 @@ main {
   flex: 1;
   p {
     margin-block-start: 0;
-    color: var(--neutral-400);
   }
   + .test-score-item {
     border-inline-start: 1px solid var(--neutral-400);
   }
+}
+.score-label {
+  color: var(--neutral-400);
+}
+.score-value {
+  font: var(--text-preset-2);
 }
 
 /* 4.5 Test settings **********************************************************************
@@ -171,9 +187,9 @@ main {
 /* 4.6 Starting page **********************************************************************
 *******************************************************************************************/
 .passage-container {
-  flex: 1;
   display: grid;
   grid-template-areas: "single-cell";
+  overflow-y: auto;
   & > * {
     grid-area: single-cell;
   }
@@ -182,7 +198,6 @@ main {
   display: grid;
   place-content: center;
   backdrop-filter: blur(8px);
-  margin: -0.5em;
 }
 .start-btn {
   background-color: var(--blue-600);
@@ -198,6 +213,9 @@ main {
 .test-passage-txt {
   font: var(--text-preset-1-regular-mobile);
   color: var(--neutral-400);
+  padding-inline: 1rem;
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 .test-passage-input {
   width: 0;
@@ -213,13 +231,6 @@ main {
   inset: 0;
   background-color: hsl(0 0 100% / 0.2);
   min-width: 0.25em;
-}
-.green-letter {
-  color: var(--green-500);
-}
-.red-letter {
-  color: var(--red-500);
-  text-decoration: underline;
 }
 
 /* 4.8 Restart ****************************************************************************
