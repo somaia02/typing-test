@@ -90,7 +90,7 @@ function handlePassageInput(e) {
     handleInsert(inputPassage, length);
   }
   e.target.dataset.prevValue = inputPassage;
-
+  autoScroll(length);
   updateScores();
 }
 
@@ -122,6 +122,15 @@ function handleDelete(length) {
   if (nxtLetter) {
     nxtLetter.classList.remove("highlighted-letter");
   }
+}
+function autoScroll(length) {
+  const letter = document.getElementById(length);
+  const scrollValue = letter.offsetTop - 0.5 * $passageTxt.offsetHeight;
+  $passageTxt.scroll({
+    top: scrollValue,
+    left: 0,
+    behavior: "smooth",
+  });
 }
 function updateScores() {
   $accuracyScore.textContent = (((totalTypedLetters - errorCount) * 100) / totalTypedLetters).toFixed(2) + "%";
