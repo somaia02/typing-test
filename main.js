@@ -1,4 +1,5 @@
 const $personalBestTxt = document.querySelector(".personal-best-txt");
+const $bestSpeedValue = document.querySelector(".best-speed-value");
 const $startingScreen = document.querySelector(".starting-screen");
 const $startBtn = document.querySelector(".start-btn");
 const $passageTxt = document.querySelector(".test-passage-txt");
@@ -12,7 +13,9 @@ let timerID;
 let errorCount = 0;
 let totalTypedLetters = 0;
 let startingTime = $timeScore.dataset.time;
-let testPassage = "The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.\"";
+let bestWPM = localStorage.bestWPM || 0;
+// let testPassage = "The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.\"";
+let testPassage = "The archaeological expedition unearthed artifacts that complica";
 
 function displayDesktop() {
   $personalBestTxt.textContent = "Personal best:";
@@ -40,7 +43,8 @@ function startTest() {
   $timeScore.classList.add("yellow-txt");
 
   // Start timer
-  timerID = setInterval(updateTime, 1000);
+  timeUpdateCaller = setInterval(updateTime, 1000);
+  scoreUpdateCaller = setInterval(updateScores, 1000);
 }
 
 function updateTime() {
@@ -52,8 +56,8 @@ function updateTime() {
   seconds = currentTime % 60;
   $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   if (currentTime === 0) {
-    clearInterval(timerID);
-    // TODO: Show results
+    clearInterval(timeUpdateCaller);
+    processResults();
   }
 }
 
@@ -73,7 +77,7 @@ function handlePassageInput(e) {
   const length = inputPassage.length;
   
   if (length > testPassage.length) {
-    // TODO: remove this and show results
+    // TODO: remove this 
     e.target.value = e.target.dataset.prevValue;
     return
   }
@@ -89,9 +93,17 @@ function handlePassageInput(e) {
   } else if (e.inputType === "insertText") {
     handleInsert(inputPassage, length);
   }
+
   e.target.dataset.prevValue = inputPassage;
-  autoScroll(length);
   updateScores();
+
+  if (length === testPassage.length) {
+    console.log("End of passage");
+    processResults();
+    return;
+  }
+  
+  autoScroll(length);
 }
 
 function handleInsert(inputPassage, length) {
@@ -132,17 +144,28 @@ function autoScroll(length) {
     behavior: "smooth",
   });
 }
-function updateScores() {
-  $accuracyScore.textContent = (((totalTypedLetters - errorCount) * 100) / totalTypedLetters).toFixed(2) + "%";
+function computeWPM() {
   const typingDuration = Math.abs($timeScore.dataset.time - startingTime) / 60;
   const wordCount = (totalTypedLetters - errorCount) / 5;
-  $wpmScore.textContent = Math.round(wordCount / typingDuration);
+  return Math.round(wordCount / typingDuration);
+}
+function updateScores() {
+  $accuracyScore.textContent = (((totalTypedLetters - errorCount) * 100) / totalTypedLetters).toFixed(2) + "%";
+  $wpmScore.textContent = computeWPM();
 }
 function resetScores() {
   $wpmScore.textContent = "0";
   $accuracyScore.textContent = "100%";
   $timeScore.dataset.time = startingTime;
   $timeScore.textContent = "00:00";
+}
+function processResults() {
+  clearInterval(timeUpdateCaller);
+  clearInterval(scoreUpdateCaller);
+  const finalWPM = computeWPM();
+  bestWPM = Math.max(bestWPM, finalWPM);
+  localStorage.bestWPM = bestWPM;
+  $bestSpeedValue.textContent = bestWPM + "WPM";
 }
 function restartTest() {
   resetScores();
@@ -158,6 +181,7 @@ if (desktopView) {
 }
 
 renderPassage();
+$bestSpeedValue.textContent = bestWPM + "WPM";
 $startBtn.focus();
 $startingScreen.addEventListener("click", startTest);
 // $passageInput.addEventListener("blur", blurPassage);
