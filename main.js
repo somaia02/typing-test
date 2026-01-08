@@ -14,14 +14,28 @@ let errorCount = 0;
 let totalTypedLetters = 0;
 let startingTime = $timeScore.dataset.time;
 let bestWPM = localStorage.bestWPM || 0;
-// let testPassage = "The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. \"We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods,\" the lead researcher observed. \"Globalization isn't as modern as we assume.\"";
-let testPassage = "The archaeological expedition unearthed artifacts that complica";
+let difficulty = "easy";
+let passageData;
+let testPassage;
 
 function displayDesktop() {
   $personalBestTxt.textContent = "Personal best:";
 }
 
+async function fetchPassageData() {
+  const response = await fetch("https://raw.githubusercontent.com/somaia02/typing-test/master/data.json");
+  if (!response.ok) {
+    throw new Error(`HTTP error: ${response.status}`);
+  }
+  passageData = await response.json();
+  return passageData;
+}
+function selecRandomPassage(passageData) {
+  let passages = passageData[difficulty];
+  return passages[Math.floor(Math.random() * passages.length)].text;
+}
 function renderPassage() {
+  testPassage = selecRandomPassage(passageData);
   $passageTxt.innerHTML = "";
   for (let i in testPassage) {
     const letter = document.createElement("span");
@@ -98,7 +112,6 @@ function handlePassageInput(e) {
   updateScores();
 
   if (length === testPassage.length) {
-    console.log("End of passage");
     processResults();
     return;
   }
@@ -180,7 +193,11 @@ if (desktopView) {
   displayDesktop();
 }
 
-renderPassage();
+fetchPassageData().then(renderPassage)
+.catch ((error) => {
+  console.error(`Could not get passages: ${error}`);
+});
+
 $bestSpeedValue.textContent = bestWPM + "WPM";
 $startBtn.focus();
 $startingScreen.addEventListener("click", startTest);
