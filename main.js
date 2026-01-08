@@ -163,14 +163,20 @@ function computeWPM() {
   return Math.round(wordCount / typingDuration);
 }
 function updateScores() {
-  $accuracyScore.textContent = (((totalTypedLetters - errorCount) * 100) / totalTypedLetters).toFixed(2) + "%";
+  if (totalTypedLetters) {
+    const acc = ((totalTypedLetters - errorCount) * 100) / totalTypedLetters;
+    $accuracyScore.textContent = (acc < 100 ? acc.toFixed(2) : acc) + "%";
+  }
   $wpmScore.textContent = computeWPM();
 }
 function resetScores() {
+  errorCount = 0;
+  totalTypedLetters = 0;
+
   $wpmScore.textContent = "0";
   $accuracyScore.textContent = "100%";
   $timeScore.dataset.time = startingTime;
-  $timeScore.textContent = "00:00";
+  $timeScore.textContent = "00:60";
 }
 function processResults() {
   clearInterval(timeUpdateCaller);
