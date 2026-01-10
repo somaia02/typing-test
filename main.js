@@ -1,5 +1,9 @@
 const $personalBestTxt = document.querySelector(".personal-best-txt");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
+const $difficultySettings = document.querySelector(".difficulty-settings");
+const $difficultyBtn = document.querySelector(".difficulty-btn");
+const $difficultyBtnText = document.querySelector(".difficulty-btn-txt");
+const $difficultyOptions = document.querySelector(".difficulty-options");
 const $startingScreen = document.querySelector(".starting-screen");
 const $startBtn = document.querySelector(".start-btn");
 const $passageTxt = document.querySelector(".test-passage-txt");
@@ -8,8 +12,14 @@ const $restartBtn = document.querySelector(".restart-btn");
 const $wpmScore = document.querySelector(".score-value-wpm");
 const $accuracyScore = document.querySelector(".score-value-accuracy");
 const $timeScore = document.querySelector(".score-value-time");
+const dropdowns = [
+  {
+    "clickArea": $difficultySettings,
+    "dropdown": $difficultyOptions,
+  }
+];
 
-let timerID;
+let timeUpdateInterval, scoreUpdateInterval;
 let errorCount = 0;
 let totalTypedLetters = 0;
 let startingTime = $timeScore.dataset.time;
@@ -18,10 +28,6 @@ let difficulty = "easy";
 let passageData;
 let testPassage;
 
-function displayDesktop() {
-  $personalBestTxt.textContent = "Personal best:";
-}
-
 async function fetchPassageData() {
   const response = await fetch("https://raw.githubusercontent.com/somaia02/typing-test/master/data.json");
   if (!response.ok) {
@@ -29,6 +35,25 @@ async function fetchPassageData() {
   }
   passageData = await response.json();
   return passageData;
+}
+
+function displayDesktop() {
+  $personalBestTxt.textContent = "Personal best:";
+}
+function hideDropdowns(event) {
+  dropdowns.forEach((element) => {
+    if (!element.clickArea.contains(event.target)) {
+      element.dropdown.classList.add("invisible");
+    }
+  });
+}
+function toggleDifficultyOptions() {
+  $difficultyOptions.classList.toggle("invisible");
+}
+function changeDifficulty(e) {
+  difficulty = e.target.value;
+  $difficultyBtnText.textContent = difficulty;
+  restartTest();
 }
 function selecRandomPassage(passageData) {
   let passages = passageData[difficulty];
@@ -57,8 +82,8 @@ function startTest() {
   $timeScore.classList.add("yellow-txt");
 
   // Start timer
-  timeUpdateCaller = setInterval(updateTime, 1000);
-  scoreUpdateCaller = setInterval(updateScores, 1000);
+  timeUpdateInterval = setInterval(updateTime, 1000);
+  scoreUpdateInterval = setInterval(updateScores, 1000);
 }
 
 function updateTime() {
@@ -70,17 +95,14 @@ function updateTime() {
   seconds = currentTime % 60;
   $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   if (currentTime === 0) {
-    clearInterval(timeUpdateCaller);
+    clearInterval(timeUpdateInterval);
+    clearInterval(scoreUpdateInterval);
     processResults();
   }
 }
-
-function blurPassage() {
-  $startingScreen.classList.remove("invisible");
-  $passageInput.blur();
-  $restartBtn.classList.remove("restart-btn-shown");
+function focusPassage(){
+  $passageInput.focus();
 }
-
 function handleInvalidAction(e) {
   if (e.key === "ArrowLeft") {
     e.preventDefault();
@@ -179,8 +201,8 @@ function resetScores() {
   $timeScore.textContent = "00:60";
 }
 function processResults() {
-  clearInterval(timeUpdateCaller);
-  clearInterval(scoreUpdateCaller);
+  clearInterval(timeUpdateInterval);
+  clearInterval(scoreUpdateInterval);
   const finalWPM = computeWPM();
   bestWPM = Math.max(bestWPM, finalWPM);
   localStorage.bestWPM = bestWPM;
@@ -194,20 +216,23 @@ function restartTest() {
   $passageInput.focus();
 }
 
-const desktopView = window.matchMedia("(min-width: 40em)").matches;
-if (desktopView) {
-  displayDesktop();
-}
-
 fetchPassageData().then(renderPassage)
 .catch ((error) => {
   console.error(`Could not get passages: ${error}`);
 });
 
+const desktopView = window.matchMedia("(min-width: 40em)").matches;
+if (desktopView) {
+  displayDesktop();
+}
+
 $bestSpeedValue.textContent = bestWPM + "WPM";
+$difficultyBtn.addEventListener("click", toggleDifficultyOptions);
+$difficultyOptions.addEventListener("change", changeDifficulty);
+window.addEventListener("click", hideDropdowns);
 $startBtn.focus();
 $startingScreen.addEventListener("click", startTest);
-// $passageInput.addEventListener("blur", blurPassage);
+$passageTxt.addEventListener("click", focusPassage);
 $passageInput.addEventListener("keydown", handleInvalidAction);
 $passageInput.addEventListener("input", handlePassageInput);
 $restartBtn.addEventListener("click", restartTest);

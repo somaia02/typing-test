@@ -166,6 +166,9 @@ main {
   gap: 0.625em;
   margin-block: 1em;
 }
+.test-settings-item {
+  position: relative;
+}
 .setting-btn {
   border: 1px solid var(--neutral-500);
   border-radius: 8px;
@@ -175,16 +178,34 @@ main {
   color: var(--neutral-0);
   width: 100%;
   text-align: center;
+  text-transform: capitalize;
 
   display: flex;
   justify-content: center;
   gap: .625em;
-
-  position: relative;
 }
 .options{
   position: absolute;
+  width: 100%;
+  margin-block-start: 0.5em;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: var(--neutral-800);
+
+  legend {
+    display: none;
+  }
+  label {
+    padding-block: 0.5em;
+  }
+  label + label {
+    border-block-start: 1px solid var(--neutral-700);
+  }
 }
+
 
 /* 4.6 Starting page **********************************************************************
 *******************************************************************************************/
