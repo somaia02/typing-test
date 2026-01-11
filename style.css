@@ -166,7 +166,7 @@ main {
   gap: 0.625em;
   margin-block: 1em;
 }
-.test-settings-item {
+.setting-item {
   position: relative;
 }
 .setting-btn {
@@ -184,7 +184,7 @@ main {
   justify-content: center;
   gap: .625em;
 }
-.options{
+.setting-options{
   position: absolute;
   width: 100%;
   margin-block-start: 0.5em;

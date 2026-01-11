@@ -1,9 +1,9 @@
 const $personalBestTxt = document.querySelector(".personal-best-txt");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
-const $difficultySettings = document.querySelector(".difficulty-settings");
-const $difficultyBtn = document.querySelector(".difficulty-btn");
-const $difficultyBtnText = document.querySelector(".difficulty-btn-txt");
-const $difficultyOptions = document.querySelector(".difficulty-options");
+const $settingItems = document.querySelectorAll(".setting-item");
+const $settingBtns = document.querySelectorAll(".setting-btn");
+const $settingBtnTexts = document.querySelectorAll(".setting-btn-txt");
+const $settingOptions = document.querySelectorAll(".setting-options");
 const $startingScreen = document.querySelector(".starting-screen");
 const $startBtn = document.querySelector(".start-btn");
 const $passageTxt = document.querySelector(".test-passage-txt");
@@ -12,19 +12,16 @@ const $restartBtn = document.querySelector(".restart-btn");
 const $wpmScore = document.querySelector(".score-value-wpm");
 const $accuracyScore = document.querySelector(".score-value-accuracy");
 const $timeScore = document.querySelector(".score-value-time");
-const dropdowns = [
-  {
-    "clickArea": $difficultySettings,
-    "dropdown": $difficultyOptions,
-  }
-];
+const settings = {
+  "difficulty": "easy",
+  "mode": "timed"
+};
 
 let timeUpdateInterval, scoreUpdateInterval;
 let errorCount = 0;
 let totalTypedLetters = 0;
 let startingTime = $timeScore.dataset.time;
 let bestWPM = localStorage.bestWPM || 0;
-let difficulty = "easy";
 let passageData;
 let testPassage;
 
@@ -41,22 +38,24 @@ function displayDesktop() {
   $personalBestTxt.textContent = "Personal best:";
 }
 function hideDropdowns(event) {
-  dropdowns.forEach((element) => {
-    if (!element.clickArea.contains(event.target)) {
-      element.dropdown.classList.add("invisible");
+  for (let i = 0; i < $settingItems.length; i++) {
+    const clickArea = $settingItems[i];
+    const dropdown = $settingOptions[i];
+    if (!clickArea.contains(event.target)) {
+      dropdown.classList.add("invisible");
     }
-  });
+  }
 }
-function toggleDifficultyOptions() {
-  $difficultyOptions.classList.toggle("invisible");
+function toggleOptions(i) {
+  $settingOptions[i].classList.toggle("invisible");
 }
-function changeDifficulty(e) {
-  difficulty = e.target.value;
-  $difficultyBtnText.textContent = difficulty;
+function changeSetting(e, i) {
+  settings[e.target.name] = e.target.value;
+  $settingBtnTexts[i].textContent = e.target.value;
   restartTest();
 }
 function selecRandomPassage(passageData) {
-  let passages = passageData[difficulty];
+  let passages = passageData[settings.difficulty];
   return passages[Math.floor(Math.random() * passages.length)].text;
 }
 function renderPassage() {
@@ -227,8 +226,8 @@ if (desktopView) {
 }
 
 $bestSpeedValue.textContent = bestWPM + "WPM";
-$difficultyBtn.addEventListener("click", toggleDifficultyOptions);
-$difficultyOptions.addEventListener("change", changeDifficulty);
+$settingBtns.forEach((btn, i) => btn.addEventListener("click", () => toggleOptions(i)));
+$settingOptions.forEach((options, i) => options.addEventListener("change", (e) => changeSetting(e, i)));
 window.addEventListener("click", hideDropdowns);
 $startBtn.focus();
 $startingScreen.addEventListener("click", startTest);
