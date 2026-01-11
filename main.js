@@ -51,7 +51,7 @@ function toggleOptions(i) {
 }
 function changeSetting(e, i) {
   settings[e.target.name] = e.target.value;
-  $settingBtnTexts[i].textContent = e.target.value;
+  $settingBtnTexts[i].textContent = e.target.labels[0].textContent;
   restartTest();
 }
 function selecRandomPassage(passageData) {
@@ -87,8 +87,11 @@ function startTest() {
 
 function updateTime() {
   let currentTime = $timeScore.dataset.time;
-  // TODO: check test settings
-  currentTime--;
+  if (settings.mode === "timed") {
+    currentTime--;
+  } else {
+    currentTime++;
+  }
   $timeScore.dataset.time = currentTime;
   minutes = Math.floor(currentTime / 60);
   seconds = currentTime % 60;
@@ -197,7 +200,7 @@ function resetScores() {
   $wpmScore.textContent = "0";
   $accuracyScore.textContent = "100%";
   $timeScore.dataset.time = startingTime;
-  $timeScore.textContent = "00:60";
+  $timeScore.textContent = startingTime ? "00:60" : "00:00";
 }
 function processResults() {
   clearInterval(timeUpdateInterval);
@@ -208,6 +211,13 @@ function processResults() {
   $bestSpeedValue.textContent = bestWPM + "WPM";
 }
 function restartTest() {
+  if (settings.mode === "timed") {
+    startingTime = 60;
+    $timeScore.dataset.time = 60;
+  } else {
+    startingTime = 0;
+    $timeScore.dataset.time = 0;
+  }
   resetScores();
   renderPassage();
   $passageInput.value = "";
