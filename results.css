@@ -1,0 +1,80 @@
+:host {
+  --fallback-font: 400 1.25rem 'Sora', system-ui;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 2rem);
+  padding-top: clamp(1em, 4vw, 2em);
+  max-width: 700px;
+  margin: 0 auto;
+}
+p {
+  margin: 0;
+  color: var(--neutral-400, white);
+}
+.red-txt {
+  color: var(--red-500, red);
+}
+.green-txt {
+  color: var(--green-500, green);
+}
+.grey-txt {
+  color: var(--neutral-400, white)
+}
+.complete-icon {
+  border-radius: 50%;
+  box-shadow: 
+    0 0 0 clamp(8px, 2vw, 16px) hsl(from var(--green-500, green) h s l / 0.2),
+    0 0 0 clamp(16px, 4vw, 32px) hsl(from var(--green-500, green) h s l / 0.1);
+}
+.text {
+  text-align: center;
+}
+.content {
+  font: var( --text-preset-3-mobile, var(--fallback-font));
+}
+.title {
+  margin-block: clamp(1rem, 3vw, 1.5rem);
+  font: var(--text-preset-1-mobile, var(--fallback-font));
+}
+.scores {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  @media (min-width: 40em) {
+    flex-direction: row;
+    gap: 1.25em;
+  }
+}
+.score-value {
+  font: var(--text-preset-2, var(--fallback-font));
+}
+.score-item {
+  flex: 1;
+
+  border: var(--neutral-700, white) solid 1px;
+  border-radius: 8px;
+
+  padding: 1em 1.5em;
+  display: grid;
+  gap: 0.75em;
+}
+.score-label {
+  font: var(--text-preset-3, var(--fallback-font));
+}
+.restart-btn {
+  background-color: var(--neutral-0, white);
+  color: var(--neutral-900, black);
+  font: var(--text-preset-3-semiBold, var(--fallback-font));
+  padding: 0.5em 0.8em;
+  border-radius: 12px;
+  border: none;
+
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}

@@ -14,8 +14,10 @@
   --yellow-400: hsl(49, 85%, 70%);
 
   /* Fonts */
+  --text-preset-1-mobile: 700 1.5rem 'Sora', system-ui;
   --text-preset-1-regular-mobile: 400 2rem 'Sora', system-ui;
   --text-preset-2: 700 1.5rem 'Sora', system-ui;
+  --text-preset-3: 400 1.25rem 'Sora', system-ui;
   --text-preset-3-mobile: 400 1rem 'Sora', system-ui;
   --text-preset-3-semiBold: 600 1.25rem 'Sora', system-ui;
 }
@@ -123,11 +125,13 @@ header {
 
 /* 4.2 Main *******************************************************************************
 *******************************************************************************************/
-main {
-  flex: 1;
+.main-test {
   display: grid;
   align-content: start;
   overflow-y: auto;
+}
+main {
+  flex: 1;
 }
 
 /* 4.3 Test header ************************************************************************

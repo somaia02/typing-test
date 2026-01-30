@@ -1,3 +1,4 @@
+const $main = document.querySelector("main");
 const $personalBestTxt = document.querySelector(".personal-best-txt");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
 const $settingItems = document.querySelectorAll(".setting-item");
@@ -54,12 +55,12 @@ function changeSetting(e, i) {
   $settingBtnTexts[i].textContent = e.target.labels[0].textContent;
   restartTest();
 }
-function selecRandomPassage(passageData) {
+function selecRandomPassage() {
   let passages = passageData[settings.difficulty];
   return passages[Math.floor(Math.random() * passages.length)].text;
 }
 function renderPassage() {
-  testPassage = selecRandomPassage(passageData);
+  testPassage = selecRandomPassage();
   $passageTxt.innerHTML = "";
   for (let i in testPassage) {
     const letter = document.createElement("span");
@@ -114,12 +115,6 @@ function handlePassageInput(e) {
   const inputPassage = e.target.value;
   const length = inputPassage.length;
   
-  if (length > testPassage.length) {
-    // TODO: remove this 
-    e.target.value = e.target.dataset.prevValue;
-    return
-  }
-
   // Prevent deletion/insertion of multiple letters at once
   if (Math.abs(length - e.target.dataset.prevValue.length) !== 1) {
     e.target.value = e.target.dataset.prevValue;
@@ -186,11 +181,16 @@ function computeWPM() {
   const wordCount = (totalTypedLetters - errorCount) / 5;
   return Math.round(wordCount / typingDuration);
 }
-function updateScores() {
+function computeAccuracy() {
+  let acc = 100;
   if (totalTypedLetters) {
-    const acc = ((totalTypedLetters - errorCount) * 100) / totalTypedLetters;
-    $accuracyScore.textContent = (acc < 100 ? acc.toFixed(2) : acc) + "%";
+    acc = ((totalTypedLetters - errorCount) * 100) / totalTypedLetters;
+    acc = (acc < 100 ? acc.toFixed(2) : acc);
   }
+  return acc
+}
+function updateScores() {
+  $accuracyScore.textContent = computeAccuracy() + "%";
   $wpmScore.textContent = computeWPM();
 }
 function resetScores() {
@@ -206,6 +206,32 @@ function processResults() {
   clearInterval(timeUpdateInterval);
   clearInterval(scoreUpdateInterval);
   const finalWPM = computeWPM();
+  const finalAccuracy = computeAccuracy();
+  $main.classList.remove("main-test");
+  let resultTxt = ""
+
+  if (!localStorage.bestWPM) {
+    resultTxt += `
+      <span slot="title">Baseline Established!</span>
+      <span slot="content">You've set the bar. Now the real challenge begins—time to beat it.</span>
+    `;
+  } else if (finalWPM > bestWPM) {
+    resultTxt += `
+      <img src="assets/images/icon-new-pb.svg" alt="" slot="icon">
+      <span slot="title">High Score Smashed!</span>
+      <span slot="content">You're getting faster. That was incredible typing.</span>
+      <span slot="restart-btn-txt">Beat This Score</span>
+    `;
+  }
+  const acc_color = finalAccuracy == 100 ? "green-txt" : "red-txt";
+  $main.innerHTML = `
+    <result-view>
+      ${resultTxt}
+      <span slot="wpm">${finalWPM}</span>
+      <span slot="accuracy" class="${acc_color}">${finalAccuracy}%</span>
+      <span slot="characters">${totalTypedLetters}</span>
+    </result-view>
+  `;
   bestWPM = Math.max(bestWPM, finalWPM);
   localStorage.bestWPM = bestWPM;
   $bestSpeedValue.textContent = bestWPM + "WPM";
