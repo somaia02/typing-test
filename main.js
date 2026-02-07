@@ -259,7 +259,7 @@ function computeAccuracy() {
 function processResults() {
   clearInterval(scoreUpdateInterval);
   renderResults(); 
-  bestWPM = Math.max(bestWPM, finalWPM);
+  bestWPM = Math.max(bestWPM, computeWPM());
   localStorage.bestWPM = bestWPM;
   renderBestWPM();
 }
