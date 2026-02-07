@@ -13,19 +13,24 @@ const $restartBtn = document.querySelector(".restart-btn");
 const $wpmScore = document.querySelector(".score-value-wpm");
 const $accuracyScore = document.querySelector(".score-value-accuracy");
 const $timeScore = document.querySelector(".score-value-time");
+
+// State
 const settings = {
   "difficulty": "easy",
   "mode": "timed"
 };
-
-let timeUpdateInterval, scoreUpdateInterval;
 let errorCount = 0;
 let totalTypedLetters = 0;
-let startingTime = $timeScore.dataset.time;
+let startingTime = 60;
+let currentTime = startingTime;
 let bestWPM = localStorage.bestWPM || 0;
 let passageData;
 let testPassage;
 
+let scoreUpdateInterval;
+
+
+// Fetch data
 async function fetchPassageData() {
   const response = await fetch("https://raw.githubusercontent.com/somaia02/typing-test/master/data.json");
   if (!response.ok) {
@@ -35,9 +40,74 @@ async function fetchPassageData() {
   return passageData;
 }
 
-function displayDesktop() {
-  $personalBestTxt.textContent = "Personal best:";
+// Display dynamic content
+function renderBestWPM() {
+  $bestSpeedValue.textContent = bestWPM + "WPM";
 }
+function renderWPM() {
+  $wpmScore.textContent = computeWPM();
+}
+function renderAccuracy() {
+  $accuracyScore.textContent = computeAccuracy() + "%";
+}
+function renderTime() {
+  minutes = Math.floor(currentTime / 60);
+  seconds = currentTime % 60;
+  $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+function renderScores() {
+  renderWPM();
+  renderAccuracy();
+  renderTime();
+}
+function renderSettings() {
+  for (let i = 0; i < $settingItems.length; i++) {
+    $settingBtnTexts[i].textContent = $settingOptions[i].querySelector('input:checked').labels[0].textContent;
+  }
+}
+function renderPassage() {
+  $passageTxt.innerHTML = "";
+  for (let i in testPassage) {
+    const letter = document.createElement("span");
+    letter.id = String(i);
+    letter.classList.add("letter");
+    letter.textContent = testPassage[i];
+    $passageTxt.appendChild(letter);
+  }
+  $passageInput.value = "";
+  $passageInput.dataset.prevValue = "";
+}
+function renderResults() {
+  $main.classList.remove("main-test");
+  const wpm = computeWPM();
+  const acc = computeAccuracy();
+  const acc_color = acc == 100 ? "green-txt" : "red-txt";
+  let resultTxt = "";
+
+  if (!localStorage.bestWPM) {    
+    resultTxt += `
+      <span slot="title">Baseline Established!</span>
+      <span slot="content">You've set the bar. Now the real challenge begins—time to beat it.</span>
+    `;
+  } else if (wpm > bestWPM) {
+    resultTxt += `
+      <img src="assets/images/icon-new-pb.svg" alt="" slot="icon">
+      <span slot="title">High Score Smashed!</span>
+      <span slot="content">You're getting faster. That was incredible typing.</span>
+      <span slot="restart-btn-txt">Beat This Score</span>
+    `;
+  }
+  $main.innerHTML = `
+    <result-view>
+      ${resultTxt}
+      <span slot="wpm">${wpm}</span>
+      <span slot="accuracy" class="${acc_color}">${acc}%</span>
+      <span slot="characters">${totalTypedLetters}</span>
+    </result-view>
+  `;
+}
+
+// Handle settings
 function hideDropdowns(event) {
   for (let i = 0; i < $settingItems.length; i++) {
     const clickArea = $settingItems[i];
@@ -50,62 +120,16 @@ function hideDropdowns(event) {
 function toggleOptions(i) {
   $settingOptions[i].classList.toggle("invisible");
 }
-function changeSetting(e, i) {
+function changeSetting(e) {
   settings[e.target.name] = e.target.value;
-  $settingBtnTexts[i].textContent = e.target.labels[0].textContent;
+  if (e.target.name == "mode") {
+    startingTime = e.target.value == "timed" ? 60 : 0;
+  }
+  renderSettings();
   restartTest();
 }
-function selecRandomPassage() {
-  let passages = passageData[settings.difficulty];
-  return passages[Math.floor(Math.random() * passages.length)].text;
-}
-function renderPassage() {
-  testPassage = selecRandomPassage();
-  $passageTxt.innerHTML = "";
-  for (let i in testPassage) {
-    const letter = document.createElement("span");
-    letter.id = String(i);
-    letter.classList.add("letter");
-    letter.textContent = testPassage[i];
-    $passageTxt.appendChild(letter);
-  }
-}
 
-function startTest() {
-  // Show passage
-  $startingScreen.classList.add("invisible");
-  $passageInput.focus();
-  $restartBtn.classList.add("restart-btn-shown");
-
-  // Add colors to scores
-  $accuracyScore.classList.add("red-txt");
-  $timeScore.classList.add("yellow-txt");
-
-  // Start timer
-  timeUpdateInterval = setInterval(updateTime, 1000);
-  scoreUpdateInterval = setInterval(updateScores, 1000);
-}
-
-function updateTime() {
-  let currentTime = $timeScore.dataset.time;
-  if (settings.mode === "timed") {
-    currentTime--;
-  } else {
-    currentTime++;
-  }
-  $timeScore.dataset.time = currentTime;
-  minutes = Math.floor(currentTime / 60);
-  seconds = currentTime % 60;
-  $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  if (currentTime === 0) {
-    clearInterval(timeUpdateInterval);
-    clearInterval(scoreUpdateInterval);
-    processResults();
-  }
-}
-function focusPassage(){
-  $passageInput.focus();
-}
+// Handle input
 function handleInvalidAction(e) {
   if (e.key === "ArrowLeft") {
     e.preventDefault();
@@ -126,9 +150,8 @@ function handlePassageInput(e) {
   } else if (e.inputType === "insertText") {
     handleInsert(inputPassage, length);
   }
-
+  
   e.target.dataset.prevValue = inputPassage;
-  updateScores();
 
   if (length === testPassage.length) {
     processResults();
@@ -176,8 +199,50 @@ function autoScroll(length) {
     behavior: "smooth",
   });
 }
+
+// Test start/restart
+function selecRandomPassage() {
+  let passages = passageData[settings.difficulty];
+  return passages[Math.floor(Math.random() * passages.length)].text;
+}
+function restartTest() {
+  errorCount = 0;
+  totalTypedLetters = 0;
+  currentTime = startingTime;
+  testPassage = selecRandomPassage();
+  renderScores();
+  renderPassage();
+  $passageInput.focus();
+}
+function startTest() {
+  // Show passage
+  $startingScreen.classList.add("invisible");
+  $passageInput.focus();
+  $restartBtn.classList.add("restart-btn-shown");
+
+  // Add colors to scores
+  $accuracyScore.classList.add("red-txt");
+  $timeScore.classList.add("yellow-txt");
+
+  // Start timer
+  scoreUpdateInterval = setInterval(updateScores, 1000);
+}
+
+// Scores
+function updateScores() {
+  if (settings.mode === "timed") {
+    currentTime--;
+  } else {
+    currentTime++;
+  }
+  renderScores();
+  if (currentTime === 0) {
+    processResults();
+  }
+}
 function computeWPM() {
-  const typingDuration = Math.abs($timeScore.dataset.time - startingTime) / 60;
+  if (startingTime == currentTime) return 0
+  const typingDuration = Math.abs(currentTime - startingTime) / 60;
   const wordCount = (totalTypedLetters - errorCount) / 5;
   return Math.round(wordCount / typingDuration);
 }
@@ -189,69 +254,28 @@ function computeAccuracy() {
   }
   return acc
 }
-function updateScores() {
-  $accuracyScore.textContent = computeAccuracy() + "%";
-  $wpmScore.textContent = computeWPM();
-}
-function resetScores() {
-  errorCount = 0;
-  totalTypedLetters = 0;
 
-  $wpmScore.textContent = "0";
-  $accuracyScore.textContent = "100%";
-  $timeScore.dataset.time = startingTime;
-  $timeScore.textContent = startingTime ? "00:60" : "00:00";
-}
+// Result
 function processResults() {
-  clearInterval(timeUpdateInterval);
   clearInterval(scoreUpdateInterval);
-  const finalWPM = computeWPM();
-  const finalAccuracy = computeAccuracy();
-  $main.classList.remove("main-test");
-  let resultTxt = ""
-
-  if (!localStorage.bestWPM) {
-    resultTxt += `
-      <span slot="title">Baseline Established!</span>
-      <span slot="content">You've set the bar. Now the real challenge begins—time to beat it.</span>
-    `;
-  } else if (finalWPM > bestWPM) {
-    resultTxt += `
-      <img src="assets/images/icon-new-pb.svg" alt="" slot="icon">
-      <span slot="title">High Score Smashed!</span>
-      <span slot="content">You're getting faster. That was incredible typing.</span>
-      <span slot="restart-btn-txt">Beat This Score</span>
-    `;
-  }
-  const acc_color = finalAccuracy == 100 ? "green-txt" : "red-txt";
-  $main.innerHTML = `
-    <result-view>
-      ${resultTxt}
-      <span slot="wpm">${finalWPM}</span>
-      <span slot="accuracy" class="${acc_color}">${finalAccuracy}%</span>
-      <span slot="characters">${totalTypedLetters}</span>
-    </result-view>
-  `;
+  renderResults(); 
   bestWPM = Math.max(bestWPM, finalWPM);
   localStorage.bestWPM = bestWPM;
-  $bestSpeedValue.textContent = bestWPM + "WPM";
-}
-function restartTest() {
-  if (settings.mode === "timed") {
-    startingTime = 60;
-    $timeScore.dataset.time = 60;
-  } else {
-    startingTime = 0;
-    $timeScore.dataset.time = 0;
-  }
-  resetScores();
-  renderPassage();
-  $passageInput.value = "";
-  $passageInput.dataset.prevValue = "";
-  $passageInput.focus();
+  renderBestWPM();
 }
 
-fetchPassageData().then(renderPassage)
+// Other
+function focusPassage(){
+  $passageInput.focus();
+}
+function displayDesktop() {
+  $personalBestTxt.textContent = "Personal best:";
+}
+
+fetchPassageData().then(() => {
+  testPassage = selecRandomPassage();
+  renderPassage();
+})
 .catch ((error) => {
   console.error(`Could not get passages: ${error}`);
 });
@@ -263,7 +287,7 @@ if (desktopView) {
 
 $bestSpeedValue.textContent = bestWPM + "WPM";
 $settingBtns.forEach((btn, i) => btn.addEventListener("click", () => toggleOptions(i)));
-$settingOptions.forEach((options, i) => options.addEventListener("change", (e) => changeSetting(e, i)));
+$settingOptions.forEach((options) => options.addEventListener("change", (e) => changeSetting(e)));
 window.addEventListener("click", hideDropdowns);
 $startBtn.focus();
 $startingScreen.addEventListener("click", startTest);
