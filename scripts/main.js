@@ -1,3 +1,6 @@
+import { fetchPassageData } from "./data.js";
+import { computeAccuracy, computeWPM } from "./scores.js";
+
 const $main = document.querySelector("main");
 const $personalBestTxt = document.querySelector(".personal-best-txt");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
@@ -29,30 +32,20 @@ let testPassage;
 
 let scoreUpdateInterval;
 
-
-// Fetch data
-async function fetchPassageData() {
-  const response = await fetch("https://raw.githubusercontent.com/somaia02/typing-test/master/data.json");
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
-  passageData = await response.json();
-  return passageData;
-}
-
 // Display dynamic content
 function renderBestWPM() {
   $bestSpeedValue.textContent = bestWPM + "WPM";
 }
 function renderWPM() {
-  $wpmScore.textContent = computeWPM();
+  $wpmScore.textContent = computeWPM(startingTime, currentTime, totalTypedLetters, errorCount);
 }
 function renderAccuracy() {
-  $accuracyScore.textContent = computeAccuracy() + "%";
+  const acc = computeAccuracy(totalTypedLetters, errorCount);
+  $accuracyScore.textContent = acc + "%";
 }
 function renderTime() {
-  minutes = Math.floor(currentTime / 60);
-  seconds = currentTime % 60;
+  const minutes = Math.floor(currentTime / 60);
+  const seconds = currentTime % 60;
   $timeScore.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 function renderScores() {
@@ -79,8 +72,8 @@ function renderPassage() {
 }
 function renderResults() {
   $main.classList.remove("main-test");
-  const wpm = computeWPM();
-  const acc = computeAccuracy();
+  const wpm = computeWPM(startingTime, currentTime, totalTypedLetters, errorCount);
+  const acc = computeAccuracy(totalTypedLetters, errorCount);
   const acc_color = acc == 100 ? "green-txt" : "red-txt";
   let resultTxt = "";
 
@@ -240,26 +233,12 @@ function updateScores() {
     processResults();
   }
 }
-function computeWPM() {
-  if (startingTime == currentTime) return 0
-  const typingDuration = Math.abs(currentTime - startingTime) / 60;
-  const wordCount = (totalTypedLetters - errorCount) / 5;
-  return Math.round(wordCount / typingDuration);
-}
-function computeAccuracy() {
-  let acc = 100;
-  if (totalTypedLetters) {
-    acc = ((totalTypedLetters - errorCount) * 100) / totalTypedLetters;
-    acc = (acc < 100 ? acc.toFixed(2) : acc);
-  }
-  return acc
-}
 
 // Result
 function processResults() {
   clearInterval(scoreUpdateInterval);
   renderResults(); 
-  bestWPM = Math.max(bestWPM, computeWPM());
+  bestWPM = Math.max(bestWPM, computeWPM(startingTime, currentTime, totalTypedLetters, errorCount));
   localStorage.bestWPM = bestWPM;
   renderBestWPM();
 }
@@ -272,7 +251,8 @@ function displayDesktop() {
   $personalBestTxt.textContent = "Personal best:";
 }
 
-fetchPassageData().then(() => {
+fetchPassageData().then((data) => {
+  passageData = data;
   testPassage = selecRandomPassage();
   renderPassage();
 })
