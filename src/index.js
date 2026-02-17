@@ -1,3 +1,5 @@
+import "./style.css"
+import "./results.js"
 import { fetchPassageData } from "./data.js";
 import { computeAccuracy, computeWPM } from "./scores.js";
 

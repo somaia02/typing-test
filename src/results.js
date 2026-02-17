@@ -1,9 +1,14 @@
+import style from './results.custom.css'
+
+const sheet = new CSSStyleSheet();
+sheet.replaceSync(style.toString());
+
 class ResultView extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({mode : 'open'});
+    this.shadowRoot.adoptedStyleSheets = [sheet];
     this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="results.css">
       <slot name="icon"><img src="assets/images/icon-completed.svg" alt="" class="complete-icon"></slot>
       <div class="text">
         <h1 class="title"><slot name="title">Test Complete!</slot></h1>
