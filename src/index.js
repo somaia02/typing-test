@@ -4,7 +4,6 @@ import { fetchPassageData } from "./data.js";
 import { computeAccuracy, computeWPM } from "./scores.js";
 
 const $main = document.querySelector("main");
-const $personalBestTxt = document.querySelector(".personal-best-txt");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
 const $settingItems = document.querySelectorAll(".setting-item");
 const $settingBtns = document.querySelectorAll(".setting-btn");
@@ -249,9 +248,6 @@ function processResults() {
 function focusPassage(){
   $passageInput.focus();
 }
-function displayDesktop() {
-  $personalBestTxt.textContent = "Personal best:";
-}
 
 fetchPassageData().then((data) => {
   passageData = data;
@@ -261,11 +257,6 @@ fetchPassageData().then((data) => {
 .catch ((error) => {
   console.error(`Could not get passages: ${error}`);
 });
-
-const desktopView = window.matchMedia("(min-width: 40em)").matches;
-if (desktopView) {
-  displayDesktop();
-}
 
 $bestSpeedValue.textContent = bestWPM + "WPM";
 $settingBtns.forEach((btn, i) => btn.addEventListener("click", () => toggleOptions(i)));

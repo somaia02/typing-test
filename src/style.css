@@ -122,6 +122,17 @@ header {
 .personal-best-txt {
   color: var(--neutral-400);
 }
+.personal-best-txt-desktop {
+  display: none;
+  @media (min-width: 40em) {
+    display: inline;
+  }
+}
+.personal-best-txt-mobile {
+  @media (min-width: 40em) {
+    display: none;
+  }
+}
 
 /* 4.2 Main *******************************************************************************
 *******************************************************************************************/
@@ -225,11 +236,13 @@ main {
   }
 }
 .setting-options{
+  /* Desktop */
   display: flex;
   align-items: center;
   visibility: visible;
   gap: 0.375em;
 
+  /* Mobile */
   @media (max-width: 39.99em) {
     visibility: hidden;
     position: absolute;
