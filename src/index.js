@@ -99,7 +99,18 @@ function renderResults() {
       <span slot="characters">${totalTypedLetters}</span>
     </result-view>
   `;
+  if (bestWPM !== 0 && wpm > bestWPM) {
+    renderConfetti();
+  }
 }
+function renderConfetti() {
+  const confettiImg = document.createElement("img");
+  confettiImg.src = "assets/images/pattern-confetti.svg";
+  confettiImg.alt = "";
+  confettiImg.classList.add("confetti");
+  $main.appendChild(confettiImg);
+}
+  
 
 // Handle settings
 function hideDropdowns(event) {

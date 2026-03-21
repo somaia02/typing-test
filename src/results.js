@@ -9,6 +9,8 @@ class ResultView extends HTMLElement {
     this.attachShadow({mode : 'open'});
     this.shadowRoot.adoptedStyleSheets = [sheet];
     this.shadowRoot.innerHTML = `
+      <img src="assets/images/pattern-star-2.svg" alt="" class="red-star">
+      <img src="assets/images/pattern-star-1.svg" alt="" class="yellow-star">
       <slot name="icon"><img src="assets/images/icon-completed.svg" alt="" class="complete-icon"></slot>
       <div class="text">
         <h1 class="title"><slot name="title">Test Complete!</slot></h1>

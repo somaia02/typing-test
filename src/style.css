@@ -42,6 +42,7 @@
       4.6 Starting page
       4.7 Passage
       4.8 Restart
+      4.9 Confetti
 */
 
 /* 1. Reset *******************************************************************************
@@ -105,7 +106,7 @@ fieldset {
 body {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* 4.1 Header *****************************************************************************
@@ -360,4 +361,15 @@ main {
 .restart-btn-shown {
   display: flex;
   gap: 0.5em;
+}
+
+/* 4.9 Confetti ****************************************************************************
+*******************************************************************************************/
+.confetti {
+  position: fixed;
+  z-index: -1;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
 }
