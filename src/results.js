@@ -41,7 +41,6 @@ class ResultView extends HTMLElement {
 
   connectedCallback() {
     const restartBtn = this.shadowRoot.querySelector("button");
-    restartBtn.focus();
     restartBtn.addEventListener("click", () => {
       window.location.reload();
     });

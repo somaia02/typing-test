@@ -79,10 +79,10 @@ fieldset {
   margin: 0;
   padding: 0;
 }
-/* :focus-visible {
+:focus-visible {
   outline: var(--blue-400) solid 2px;
   outline-offset: 3px;
-} */
+}
 
 /* 3. Utilities ***************************************************************************
 *******************************************************************************************/
@@ -281,17 +281,25 @@ main {
   + label {
     border-block-start: 1px solid var(--neutral-700);
   }
+
+  /* move focus from radio input to label */
+  &:has(input:focus-visible) {
+    outline: var(--blue-400) solid 2px;
+    outline-offset: 3px;
+  } 
   @media (min-width: 40em) {
     border: 1px solid var(--neutral-500);
     border-radius: 8px;
     padding: 0.375em 0.625em;
 
-    &:has(input:checked) {
+    &:has(input:checked),
+    &:hover {
       border: 1px solid var(--blue-400);
       color: var(--blue-400);
     }
 
     input{
+      outline: none;
       appearance: none;
       margin: 0;
     }
@@ -321,6 +329,10 @@ main {
   border-radius: 12px;
   padding: 1em 1.5em;
   border: none;
+
+  &:hover {
+    background-color: var(--blue-400);
+  }
 }
 
 /* 4.7 Passage ****************************************************************************

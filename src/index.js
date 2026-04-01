@@ -218,12 +218,12 @@ function restartTest() {
   testPassage = selecRandomPassage();
   renderScores();
   renderPassage();
-  $passageInput.focus();
 }
 function startTest() {
   // Show passage
   $startingScreen.classList.add("invisible");
   $passageInput.focus();
+  $passageInput.tabIndex = 0;
   $restartBtn.classList.add("restart-btn-shown");
 
   // Add colors to scores
