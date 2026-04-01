@@ -16,20 +16,20 @@
 </head>
 <body>
   <header class="container">
-    <picture>
-      <source srcset="assets/images/logo-large.svg" media="(min-width: 40em)" />
-      <img src="assets/images/logo-small.svg" alt="" class="logo">
-    </picture>
-    <div class="best-speed">
-      <img src="assets/images/icon-personal-best.svg" alt="trophy">
-      <p>
-        <span class="personal-best-txt personal-best-txt-desktop">Personal best:</span>
-        <span class="personal-best-txt personal-best-txt-mobile">Best:</span>
-        <span class="best-speed-value">92WPM</span>
-      </p>
+    <div class="page-header">
+      <picture>
+        <source srcset="assets/images/logo-large.svg" media="(min-width: 40em)" />
+        <img src="assets/images/logo-small.svg" alt="" class="logo">
+      </picture>
+      <div class="best-speed">
+        <img src="assets/images/icon-personal-best.svg" alt="trophy">
+        <p>
+          <span class="personal-best-txt personal-best-txt-desktop">Personal best:</span>
+          <span class="personal-best-txt personal-best-txt-mobile">Best:</span>
+          <span class="best-speed-value">92WPM</span>
+        </p>
+      </div>
     </div>
-  </header>
-  <main class="main-test container auto-overflow">
     <div class="test-header">
       <ul class="test-scores">
         <li class="test-score-item wpm-container">
@@ -68,6 +68,8 @@
         </li>
       </ul>
     </div>
+  </header>
+  <main class="main-test container">
     <div class="passage-container">
       <p class="test-passage-txt"></p>
       <textarea name="test-passage" class="test-passage-input" data-prev-value="" tabindex="-1"></textarea>

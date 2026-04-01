@@ -3,6 +3,7 @@ import "./results.js"
 import { fetchPassageData } from "./data.js";
 import { computeAccuracy, computeWPM } from "./scores.js";
 
+const $body = document.querySelector("body");
 const $main = document.querySelector("main");
 const $bestSpeedValue = document.querySelector(".best-speed-value");
 const $settingItems = document.querySelectorAll(".setting-item");
@@ -197,8 +198,8 @@ function handleDelete(length) {
 }
 function autoScroll(length) {
   const letter = document.getElementById(length);
-  const scrollValue = letter.offsetTop - 0.5 * $passageTxt.offsetHeight;
-  $passageTxt.scroll({
+  const scrollValue = letter.offsetTop - 0.5 * $body.offsetHeight;
+  window.scrollTo({
     top: scrollValue,
     left: 0,
     behavior: "smooth",
