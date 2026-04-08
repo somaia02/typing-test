@@ -61,11 +61,6 @@ img {
 
 /* 2. General styles **********************************************************************
 *******************************************************************************************/
-body {
-  background-color: var(--neutral-900);
-  color: var(--neutral-0);
-  font: var(--text-preset-3-mobile);
-}
 ul {
   list-style: none;
   margin: 0;
@@ -109,6 +104,10 @@ fieldset {
   margin: 0 auto;
 }
 body {
+  background-color: var(--neutral-900);
+  color: var(--neutral-0);
+  font: var(--text-preset-3-mobile);
+  
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -270,16 +269,19 @@ main {
   }
 }
 .setting-title {
-  /* Visually hidden on mobile, accessible to screen readers */
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-
-  @media (min-width: 40em) {
-    display: contents;
+  display: contents;
+  @media (max-width: 39.99em) {
+    /* Visually hidden on mobile, accessible to screen readers */
+    position: absolute;       /* Remove from the normal document flow */
+    width: 1px;               /* Set to a minimum size for screen reader detection */
+    height: 1px;
+    padding: 0;
+    margin: -1px;             /* Offset the 1px size to avoid affecting layout */
+    overflow: hidden;         /* Hide anything that overflows the 1px box */
+    clip: rect(0, 0, 0, 0);   /* Legacy clipping for older browsers */
+    clip-path: inset(50%);    /* Modern clipping method */
+    white-space: nowrap;      /* Prevent words from wrapping weirdly */
+    border: 0;
   }
 }
 .setting-options label {
@@ -298,8 +300,8 @@ main {
     border-radius: 8px;
     padding: 0.375em 0.625em;
 
-    &:has(input:checked),
-    &:hover {
+    &:hover,
+    &:has(input:checked) {
       border: 1px solid var(--blue-400);
       color: var(--blue-400);
     }

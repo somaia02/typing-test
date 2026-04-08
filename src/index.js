@@ -64,7 +64,7 @@ function renderPassage() {
   $passageTxt.innerHTML = "";
   for (let i in testPassage) {
     const letter = document.createElement("span");
-    letter.id = String(i);
+    letter.id = "l" +String(i);
     letter.classList.add("letter");
     letter.textContent = testPassage[i];
     $passageTxt.appendChild(letter);
@@ -170,7 +170,7 @@ function handlePassageInput(e) {
 }
 
 function handleInsert(inputPassage, length) {
-  const letter = document.getElementById(length - 1);
+  const letter = document.getElementById("l" + (length - 1));
   letter.classList.remove("highlighted-letter");
   if (inputPassage.at(-1) === letter.textContent) {
     letter.classList.add("green-txt");
@@ -181,25 +181,25 @@ function handleInsert(inputPassage, length) {
   }
   totalTypedLetters++;
 
-  const nxtLetter = document.getElementById(length);
+  const nxtLetter = document.getElementById("l" + length);
   if (nxtLetter) {
     nxtLetter.classList.add("highlighted-letter");
   }
 }
 function handleDelete(length) {
-  const letter = document.getElementById(length);
+  const letter = document.getElementById("l" + (length - 1));
   letter.classList.add("highlighted-letter");
   letter.classList.remove("green-txt");
   letter.classList.remove("red-txt");
   letter.classList.remove("underlined-txt");
 
-  const nxtLetter = document.getElementById(length + 1);
+  const nxtLetter = document.getElementById("l" + length);
   if (nxtLetter) {
     nxtLetter.classList.remove("highlighted-letter");
   }
 }
 function autoScroll(length) {
-  const letter = document.getElementById(length);
+  const letter = document.getElementById("l" + (length - 1));
   const scrollValue = letter.offsetTop - 0.5 * $body.offsetHeight;
   window.scrollTo({
     top: scrollValue,
