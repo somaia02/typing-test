@@ -56,13 +56,13 @@ function renderScores() {
   renderTime();
 }
 function renderSettings() {
-  for (let i = 0; i < $settingItems.length; i++) {
+  for (const i = 0; i < $settingItems.length; i++) {
     $settingBtnTexts[i].textContent = $settingOptions[i].querySelector('input:checked').labels[0].textContent;
   }
 }
 function renderPassage() {
   $passageTxt.innerHTML = "";
-  for (let i in testPassage) {
+  for (const i in testPassage) {
     const letter = document.createElement("span");
     letter.id = "l" +String(i);
     letter.classList.add("letter");
@@ -76,7 +76,7 @@ function renderResults() {
   $main.classList.remove("main-test");
   const wpm = computeWPM(startingTime, currentTime, totalTypedLetters, errorCount);
   const acc = computeAccuracy(totalTypedLetters, errorCount);
-  const acc_color = acc == 100 ? "green-txt" : "red-txt";
+  const acc_color = acc === 100 ? "green-txt" : "red-txt";
   let resultTxt = "";
 
   if (!localStorage.bestWPM) {    
@@ -115,7 +115,7 @@ function renderConfetti() {
 
 // Handle settings
 function hideDropdowns(event) {
-  for (let i = 0; i < $settingItems.length; i++) {
+  for (const i = 0; i < $settingItems.length; i++) {
     const clickArea = $settingItems[i];
     const dropdown = $settingOptions[i];
     if (!clickArea.contains(event.target)) {
@@ -126,12 +126,12 @@ function hideDropdowns(event) {
 }
 function toggleOptions(i) {
   $settingOptions[i].classList.toggle("invisible");
-  $settingBtns[i].ariaExpanded = $settingBtns[i].ariaExpanded == 'false';
+  $settingBtns[i].ariaExpanded = $settingBtns[i].ariaExpanded === 'false';
 }
 function changeSetting(e) {
   settings[e.target.name] = e.target.value;
-  if (e.target.name == "mode") {
-    startingTime = e.target.value == "timed" ? 60 : 0;
+  if (e.target.name === "mode") {
+    startingTime = e.target.value === "timed" ? 60 : 0;
   }
   renderSettings();
   restartTest();
