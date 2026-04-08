@@ -270,10 +270,16 @@ main {
   }
 }
 .setting-title {
-  display: none;
+  /* Visually hidden on mobile, accessible to screen readers */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
 
   @media (min-width: 40em) {
-    display: inline;
+    display: contents;
   }
 }
 .setting-options label {
@@ -399,6 +405,6 @@ main {
   text-align: center;
   margin-block: 1em;;
   a {
-    color: hsl(228, 45%, 44%);
+    color: hsl(228, 80%, 64%);
   }
 }

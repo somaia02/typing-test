@@ -120,11 +120,13 @@ function hideDropdowns(event) {
     const dropdown = $settingOptions[i];
     if (!clickArea.contains(event.target)) {
       dropdown.classList.add("invisible");
+      $settingBtns[i].ariaExpanded = false;
     }
   }
 }
 function toggleOptions(i) {
   $settingOptions[i].classList.toggle("invisible");
+  $settingBtns[i].ariaExpanded = $settingBtns[i].ariaExpanded == 'false';
 }
 function changeSetting(e) {
   settings[e.target.name] = e.target.value;
@@ -270,6 +272,7 @@ fetchPassageData().then((data) => {
   console.error(`Could not get passages: ${error}`);
 });
 
+$passageInput.tabIndex = -1; // Make input unfocusable until test starts
 $bestSpeedValue.textContent = bestWPM + "WPM";
 $settingBtns.forEach((btn, i) => btn.addEventListener("click", () => toggleOptions(i)));
 $settingOptions.forEach((options) => options.addEventListener("change", (e) => changeSetting(e)));

@@ -39,24 +39,24 @@
       </ul>
       <ul class="test-settings">
         <li class="setting-item difficulty-settings">
-          <button type="button" class="setting-btn difficulty-btn">
+          <button type="button" class="setting-btn difficulty-btn" aria-controls="difficulty-options" aria-expanded="false">
             <span class="setting-btn-txt">Easy</span>
             <img src="assets/images/icon-down-arrow.svg" alt="arrow">
           </button>
-          <fieldset class="setting-options difficulty-options invisible">
-            <p class="setting-title">Difficulty:</p>
+          <fieldset class="setting-options invisible" id="difficulty-options">
+            <legend class="setting-title">Difficulty:</legend>
             <label><input type="radio" name="difficulty" value="easy" checked>Easy</label>
             <label><input type="radio" name="difficulty" value="medium">Medium</label>
             <label><input type="radio" name="difficulty" value="hard">Hard</label>
           </fieldset>
         </li>
         <li class="setting-item">
-          <button type="button" class="setting-btn mode-btn">
+          <button type="button" class="setting-btn mode-btn" aria-controls="mode-options" aria-expanded="false">
             <span class="setting-btn-txt">Timed(60s)</span>
             <img src="assets/images/icon-down-arrow.svg" alt="arrow">
           </button>
-          <fieldset class="setting-options mode-options invisible">
-            <p class="setting-title">Mode:</p>
+          <fieldset class="setting-options invisible" id="mode-options">
+            <legend class="setting-title">Mode:</legend>
             <label><input type="radio" name="mode" value="timed" checked>Timed(60s)</label>
             <label><input type="radio" name="mode" value="passage">Passage</label>
           </fieldset>
@@ -67,7 +67,7 @@
   <main class="main-test container">
     <div class="passage-container">
       <p class="test-passage-txt"></p>
-      <textarea name="test-passage" class="test-passage-input" data-prev-value="" tabindex="-1"></textarea>
+      <textarea name="test-passage" class="test-passage-input" data-prev-value=""></textarea>
       <div class="starting-screen">
         <button type="button" class="start-btn">Start Typing Test</button>
         <p>Or click the text and start typing</p>
